@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | SS Ltd.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+    
+    <div class="glass-login-container">
+        <div class="login-header">
+            <h2><span style="color: #00CFFF;">C</span>RMate</h2>
+            <p>Secure Admin Portal</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email Address</label>
+                <input type="email" id="loginEmail" required placeholder="admin@ssltd.com">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="loginPassword" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="dash-add-btn login-btn">Login to Dashboard</button>
+        </form>
+
+        <div class="demo-hint">
+            <p><strong><i class="fas fa-info-circle"></i> Demo Access Credentials</strong></p>
+            <p>Email: <span>admin@ssltd.com</span></p>
+            <p>Password: <span>admin123</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

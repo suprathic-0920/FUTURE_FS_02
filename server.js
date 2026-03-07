@@ -1,0 +1,113 @@
+const express = require('express');
+const cors = require('cors');
+const sqlite3 = require('sqlite3').verbose();
+
+const app = express();
+const port = 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// 1. Database Setup (Transactions table added)
+const db = new sqlite3.Database('./crm.db', (err) => {
+    if (err) console.error('Database Error:', err.message);
+    else {
+        console.log('✅ Connected to SQLite Database Successfully!');
+        
+        // Leads Table
+        db.run(`CREATE TABLE IF NOT EXISTS leads (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            source TEXT,
+            status TEXT DEFAULT 'New',
+            date TEXT,
+            notes TEXT DEFAULT ''
+        )`);
+
+        // Transactions Table (New)
+        db.run(`CREATE TABLE IF NOT EXISTS transactions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            action_type TEXT NOT NULL,
+            date TEXT NOT NULL
+        )`);
+    }
+});
+
+// --- LEADS API ---
+
+// READ LEADS
+app.get('/api/leads', (req, res) => {
+    db.all("SELECT * FROM leads ORDER BY id DESC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ data: rows });
+    });
+});
+
+// CREATE LEAD
+app.post('/api/leads', (req, res) => {
+    const { name, email, source, status } = req.body;
+    const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    const query = `INSERT INTO leads (name, email, source, status, date) VALUES (?, ?, ?, ?, ?)`;
+    db.run(query, [name, email, source, status || 'New', date], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        
+        // Save to transactions table
+        db.run(`INSERT INTO transactions (name, action_type, date) VALUES (?, ?, ?)`, [name, 'New Lead', date], (txnErr) => {
+            if (txnErr) console.error("Txn Error:", txnErr);
+            res.json({ message: 'Lead added successfully!', id: this.lastID });
+        });
+    });
+});
+
+// UPDATE LEAD
+app.put('/api/leads/:id', (req, res) => {
+    const { name, status, notes } = req.body; // Getting name for transaction
+    const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    const query = `UPDATE leads SET status = ?, notes = ? WHERE id = ?`;
+    db.run(query, [status, notes, req.params.id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        
+        // Save to transactions table
+        db.run(`INSERT INTO transactions (name, action_type, date) VALUES (?, ?, ?)`, [name, status, date], (txnErr) => {
+            if (txnErr) console.error("Txn Error:", txnErr);
+            res.json({ message: 'Lead updated successfully!' });
+        });
+    });
+});
+
+// DELETE LEAD
+app.delete('/api/leads/:id', (req, res) => {
+    db.run(`DELETE FROM leads WHERE id = ?`, [req.params.id], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: 'Lead deleted successfully!' });
+    });
+});
+
+// --- TRANSACTIONS API ---
+
+// READ RECENT TRANSACTIONS (Latest 4)
+app.get('/api/transactions', (req, res) => {
+    db.all("SELECT * FROM transactions ORDER BY id DESC LIMIT 4", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ data: rows });
+    });
+});
+// --- ADMIN LOGIN API ---
+app.post('/api/login', (req, res) => {
+    const { email, password } = req.body;
+    
+    // Evaluators check panra demo credentials
+    if (email === 'admin@ssltd.com' && password === 'admin123') {
+        res.json({ success: true, token: 'secure-crm-demo-token-12345' });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid Email or Password!' });
+    }
+});
+
+app.listen(port, () => {
+    console.log(`🚀 Backend Server is running at http://localhost:${port}`);
+});
