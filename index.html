@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRMate Dashboard | SS Ltd.</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dash-body">
+    <div class="dash-container">
+        
+        <nav class="dash-sidebar">
+            <div class="dash-logo animate-logo">
+                <span class="logo-c">C</span>RMate
+            </div>
+            <ul class="dash-menu">
+                <li><i class="fas fa-home menu-icon"></i> Home</li>
+                <li><i class="fas fa-box menu-icon"></i> Products</li>
+                <li><i class="fas fa-tasks menu-icon"></i> Tasks</li>
+                <li><i class="fas fa-user-circle menu-icon"></i> Accounts</li>
+                <li><i class="fas fa-address-book menu-icon"></i> Contacts</li>
+                <li class="active"><i class="fas fa-file-invoice-dollar menu-icon yellow"></i> Invoices</li>
+                <li><i class="fas fa-credit-card menu-icon"></i> Payments</li>
+                <li><i class="fas fa-folder-open menu-icon"></i> Documents</li>
+            </ul>
+            <div class="dash-profile">
+                <div class="profile-pic-placeholder">S</div>
+                <div class="profile-text">
+                    <span class="profile-name">Suprathic KGS</span>
+                    <span class="profile-role">Admin</span>
+                </div>
+                <i class="fas fa-sign-out-alt logout-icon"></i>
+            </div>
+        </nav>
+
+        <main class="dash-main">
+            <header class="dash-header">
+                <div class="dash-header-left">
+                    <i class="fas fa-arrow-left back-icon"></i>
+                    <h1 class="dash-title animate-text-3d">
+                        SS LTD.
+                    </h1>
+                    <p class="dash-address">USA, 20-Insta Street, Pincode 9112006</p>
+                </div>
+                <div class="dash-header-right">
+                    <i class="fas fa-search action-icon"></i>
+                    <i class="fas fa-bell action-icon"></i>
+                    <button class="dash-add-btn" id="openModalBtn"><i class="fas fa-plus"></i> Add new lead</button>
+                </div>
+            </header>
+
+            <div class="dash-content-grid">
+                <section class="dash-overall-status">
+                    <div class="overall-metrics">
+                        <div class="metric-card interactive hover-green">
+                            <h3><i class="fas fa-check-circle metric-icon"></i> Paid</h3>
+                            <div class="metric-value-line">
+                                <span class="metric-amount">$1,234.00</span>
+                                <span class="metric-change">+35% Last week</span>
+                            </div>
+                        </div>
+                        <div class="metric-card interactive hover-green">
+                            <h3><i class="fas fa-exclamation-circle metric-icon"></i> Due</h3>
+                            <div class="metric-value-line">
+                                <span class="metric-amount">$797.00</span>
+                                <span class="metric-change">+17% Last week</span>
+                            </div>
+                        </div>
+                        <div class="metric-card interactive hover-green">
+                            <h3><i class="fas fa-wallet metric-icon"></i> Balance</h3>
+                            <div class="metric-value-line">
+                                <span class="metric-amount">$8,234.00</span>
+                                <span class="metric-change grey">-35% Last week</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dash-payments-transactions">
+                    <div class="dash-payment-methods">
+                        <h2><i class="fas fa-credit-card section-title-icon"></i> Conversion Methods</h2>
+                        <div class="methods-card-container">
+                            <div class="visa-card split-animate premium-blue">
+                                <div class="card-piece visa-p1"></div>
+                                <div class="card-piece visa-p2"></div>
+                                <div class="card-piece visa-p3"></div>
+                                <div class="card-piece visa-p4"></div>
+                                <div class="card-piece visa-p5"></div>
+                                <div class="card-piece visa-p6"></div>
+                                <div class="card-piece visa-p7"></div>
+                                <div class="card-main-content">
+                                    <div class="card-chip gold-chip"></div>
+                                    <p class="card-universal">Universal</p>
+                                    <h3 class="card-amount">$8,523.20</h3>
+                                    <div class="card-bottom">
+                                        <span class="card-number">*9423 06/28</span>
+                                        <span class="card-logo">VISA</span>
+                                    </div>
+                                </div> 
+                            </div>
+
+                            <div class="add-method interactive hover-green">
+                                <i class="fas fa-plus-circle add-icon"></i> 
+                                <span>Add method</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dash-recent-transactions section-mint">
+                        <div class="section-header">
+                            <h2><i class="fas fa-history section-title-icon"></i> Recent transactions</h2>
+                            <a href="#" class="view-all">View all</a>
+                        </div>
+                        <ul class="transaction-list" id="transactionList">
+                            <li class="empty-txn-msg" style="background: transparent; box-shadow: none; justify-content: center; color: var(--text-muted);">
+                                No recent transactions yet.
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="dash-invoices section-lavender">
+                    <h2><i class="fas fa-filter section-title-icon"></i> Leads Pipeline</h2>
+                    <table class="invoices-table">
+                        <thead>
+                            <tr>
+                                <th>LEAD ID</th>
+                                <th>LEAD INFO</th>
+                                <th>CREATED</th>
+                                <th>SOURCE</th>
+                                <th>EST. VALUE</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leadsTableBody">
+                            <tr class="interactive-row">
+                                <td colspan="7" style="text-align: center; color: var(--text-muted);">Loading database records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div id="leadModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2><i class="fas fa-user-plus"></i> Add New Lead</h2>
+            <form id="addLeadForm">
+                <div class="form-group">
+                    <label>Lead Name</label>
+                    <input type="text" id="leadName" required placeholder="E.g. John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="leadEmail" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Source</label>
+                    <select id="leadSource">
+                        <option value="Website">Website</option>
+                        <option value="Referral">Referral</option>
+                        <option value="LinkedIn">LinkedIn</option>
+                    </select>
+                </div>
+                <button type="submit" class="dash-add-btn" style="width: 100%; justify-content: center; margin-top: 15px;">Save Lead to Database</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-review-btn">&times;</span>
+            <h2 style="font-size: 1.5rem; margin-bottom: 25px;">Review Lead Details</h2>
+            <form id="reviewLeadForm">
+                <input type="hidden" id="reviewLeadId">
+                <div class="form-group">
+                    <label style="color: #999; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">LEAD STAGE</label>
+                    <select id="reviewStatus" style="font-weight: 600;">
+                        <option value="New">New</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="Converted">Converted</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label style="color: #999; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">MEETING / CALL NOTES</label>
+                    <textarea id="reviewNotes" rows="4" placeholder="" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none; font-family: inherit; font-size: 0.95rem; resize: none;"></textarea>
+                </div>
+                <button type="submit" class="dash-add-btn" style="width: 100%; justify-content: center; margin-top: 20px; font-weight: 700;">Save Details</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <div id="toastNotification" class="toast-container">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Added new lead successfully!</span>
+    </div>
+</body>
+</html>
