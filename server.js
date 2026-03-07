@@ -1,30 +1,29 @@
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
-const path = require('path'); // Pudhusa add pannirukkom
+const path = require('path'); 
 
 const app = express();
+// RENDER PORT CONFIGURATION
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-// --- HTML, CSS, JS FILES-A BROWSER-KU ANUPPA MAGIC CODE ---
+// Serve HTML, CSS, JS files
 app.use(express.static(__dirname));
 
-// Direct-a localhost:3000 potta login page-a kaata
+// Default Route (Directs to Login Page)
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
-// ---------------------------------------------------------
 
-// 1. Database Setup (Transactions table added)
+// Database Setup
 const db = new sqlite3.Database('./crm.db', (err) => {
     if (err) console.error('Database Error:', err.message);
     else {
         console.log('✅ Connected to SQLite Database Successfully!');
         
-        // Leads Table
         db.run(`CREATE TABLE IF NOT EXISTS leads (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -35,7 +34,6 @@ const db = new sqlite3.Database('./crm.db', (err) => {
             notes TEXT DEFAULT ''
         )`);
 
-        // Transactions Table
         db.run(`CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -109,5 +107,5 @@ app.get('/api/transactions', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`🚀 Backend Server is running at http://localhost:${port}`);
+    console.log(`🚀 Backend Server is running on port ${port}`);
 });

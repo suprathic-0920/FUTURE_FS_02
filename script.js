@@ -1,20 +1,15 @@
 /* --- script.js --- */
 
-/* --- 1. SECURITY AUTHENTICATION & LOGIN CHECK --- */
 const currentPage = window.location.pathname.split('/').pop();
 const isAuthenticated = localStorage.getItem('crm_token');
 
-// Dashboard-ku varum pothu login aagalana login page-ku thallanum
 if (currentPage === 'index.html' || currentPage === '') {
     if (!isAuthenticated) window.location.href = 'login.html';
 }
 
-// Login Page-la irukkum pothu
 if (currentPage === 'login.html') {
-    // Already login aagi irundha thirumba login poga koodathu, dashboard-ku pogum
     if (isAuthenticated) window.location.href = 'index.html';
 
-    // Login Form Submit Logic (Ithu thaan refresh aagama ulla anuppum!)
     document.addEventListener("DOMContentLoaded", () => {
         const loginForm = document.getElementById("loginForm");
         if (loginForm) {
@@ -27,7 +22,8 @@ if (currentPage === 'login.html') {
                 btn.innerText = "Verifying...";
 
                 try {
-                    const response = await fetch('http://localhost:3000/api/login', {
+                    // LOCALHOST REMOVED
+                    const response = await fetch('/api/login', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password })
@@ -37,12 +33,12 @@ if (currentPage === 'login.html') {
                     
                     if (response.ok && result.success) {
                         localStorage.setItem('crm_token', result.token);
-                        window.location.href = 'index.html'; // Dashboard-ku pogum
+                        window.location.href = 'index.html'; 
                     } else {
                         alert(result.message);
                     }
                 } catch (error) {
-                    alert("Backend Server is not running!");
+                    alert("Server Error! Please try again.");
                 } finally {
                     btn.innerText = ogText;
                 }
@@ -51,8 +47,6 @@ if (currentPage === 'login.html') {
     });
 }
 
-/* --- 2. UI ANIMATIONS & CUSTOM EFFECTS --- */
-// Custom cursor trail 
 const body = document.querySelector('body.dash-body');
 document.addEventListener('mousemove', (e) => {
     const xPercentage = (e.clientX / window.innerWidth) * 100;
@@ -63,7 +57,6 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
-// Dynamic 3D split text
 const title = document.querySelector('.dash-title.animate-text-3d');
 const splitText = () => {
     if(!title) return; 
@@ -78,7 +71,6 @@ const splitText = () => {
 };
 splitText();
 
-/* --- 3. TOAST & MODALS SETUP --- */
 const modal = document.getElementById("leadModal");
 const reviewModal = document.getElementById("reviewModal");
 const openModalBtn = document.getElementById("openModalBtn"); 
@@ -91,7 +83,6 @@ const transactionList = document.getElementById("transactionList");
 
 window.currentReviewName = "";
 
-// Custom Toast Function
 function showToast(message) {
     const toast = document.getElementById("toastNotification");
     const toastMsg = document.getElementById("toastMessage");
@@ -102,7 +93,6 @@ function showToast(message) {
     }
 }
 
-// Open/Close Modals
 if(openModalBtn) openModalBtn.addEventListener("click", () => modal.classList.add("show"));
 if(closeBtn) closeBtn.addEventListener("click", () => modal.classList.remove("show"));
 if(closeReviewBtn) closeReviewBtn.addEventListener("click", () => reviewModal.classList.remove("show"));
@@ -112,7 +102,6 @@ window.addEventListener("click", (e) => {
     if (e.target === reviewModal) reviewModal.classList.remove("show");
 });
 
-/* --- 4. LOGOUT & DUMMY BUTTONS --- */
 const logoutIcon = document.querySelector('.logout-icon');
 if (logoutIcon) {
     logoutIcon.addEventListener('click', () => {
@@ -131,13 +120,12 @@ dummyButtons.forEach(btn => {
     });
 });
 
-/* --- 5. BACKEND API CALLS (Only run on Dashboard) --- */
 if (currentPage === 'index.html') {
     
-    // GET: Fetch Transactions
     async function fetchTransactions() {
         try {
-            const response = await fetch('http://localhost:3000/api/transactions');
+            // LOCALHOST REMOVED
+            const response = await fetch('/api/transactions');
             const result = await response.json();
             transactionList.innerHTML = ''; 
             
@@ -174,15 +162,13 @@ if (currentPage === 'index.html') {
                 `;
                 transactionList.appendChild(li);
             });
-        } catch (error) {
-            console.error("Error fetching txns:", error);
-        }
+        } catch (error) { console.error("Error fetching txns:", error); }
     }
 
-    // GET: Fetch Leads
     async function fetchLeads() {
         try {
-            const response = await fetch('http://localhost:3000/api/leads');
+            // LOCALHOST REMOVED
+            const response = await fetch('/api/leads');
             const result = await response.json();
             tableBody.innerHTML = ''; 
             
@@ -220,12 +206,9 @@ if (currentPage === 'index.html') {
                 `;
                 tableBody.appendChild(row);
             });
-        } catch (error) {
-            console.error("Error fetching leads:", error);
-        }
+        } catch (error) { console.error("Error fetching leads:", error); }
     }
 
-    // OPEN REVIEW MODAL
     window.openReviewModal = function(id, name, currentStatus, currentNotes) {
         document.getElementById("reviewLeadId").value = id;
         document.getElementById("reviewStatus").value = currentStatus;
@@ -234,7 +217,6 @@ if (currentPage === 'index.html') {
         reviewModal.classList.add("show");
     }
 
-    // POST: Add Lead
     if(form) {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -244,7 +226,8 @@ if (currentPage === 'index.html') {
                 source: document.getElementById("leadSource").value,
                 status: "New"
             };
-            const response = await fetch('http://localhost:3000/api/leads', {
+            // LOCALHOST REMOVED
+            const response = await fetch('/api/leads', {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(leadData)
             });
             if (response.ok) {
@@ -255,7 +238,6 @@ if (currentPage === 'index.html') {
         });
     }
 
-    // PUT: Update Lead Details
     if(reviewForm) {
         reviewForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -265,7 +247,8 @@ if (currentPage === 'index.html') {
             const ogText = submitBtn.innerHTML; submitBtn.innerHTML = "Saving...";
 
             try {
-                const response = await fetch(`http://localhost:3000/api/leads/${id}`, {
+                // LOCALHOST REMOVED
+                const response = await fetch(`/api/leads/${id}`, {
                     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updateData)
                 });
                 if(response.ok) {
@@ -278,16 +261,15 @@ if (currentPage === 'index.html') {
         });
     }
 
-    // DELETE: Remove Lead
     window.deleteLead = async function(id) {
         if(confirm("Are you sure you want to delete this lead?")) {
-            await fetch(`http://localhost:3000/api/leads/${id}`, { method: 'DELETE' });
+            // LOCALHOST REMOVED
+            await fetch(`/api/leads/${id}`, { method: 'DELETE' });
             fetchLeads();
             showToast("Lead deleted! 🗑️");
         }
     }
 
-    // Initial Fetch
     fetchLeads();
     fetchTransactions();
 }
