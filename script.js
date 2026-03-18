@@ -1,5 +1,8 @@
 /* --- script.js --- */
 
+
+const API_BASE_URL = 'https://future-fs-02-gzhx.onrender.com';
+
 const currentPage = window.location.pathname.split('/').pop();
 const isAuthenticated = localStorage.getItem('crm_token');
 
@@ -22,8 +25,8 @@ if (currentPage === 'login.html') {
                 btn.innerText = "Verifying...";
 
                 try {
-                    // LOCALHOST REMOVED
-                    const response = await fetch('/api/login', {
+                    // API URL UPDATED
+                    const response = await fetch(`${API_BASE_URL}/api/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password })
@@ -124,8 +127,8 @@ if (currentPage === 'index.html') {
     
     async function fetchTransactions() {
         try {
-            // LOCALHOST REMOVED
-            const response = await fetch('/api/transactions');
+            // API URL UPDATED
+            const response = await fetch(`${API_BASE_URL}/api/transactions`);
             const result = await response.json();
             transactionList.innerHTML = ''; 
             
@@ -167,8 +170,8 @@ if (currentPage === 'index.html') {
 
     async function fetchLeads() {
         try {
-            // LOCALHOST REMOVED
-            const response = await fetch('/api/leads');
+            // API URL UPDATED
+            const response = await fetch(`${API_BASE_URL}/api/leads`);
             const result = await response.json();
             tableBody.innerHTML = ''; 
             
@@ -226,8 +229,8 @@ if (currentPage === 'index.html') {
                 source: document.getElementById("leadSource").value,
                 status: "New"
             };
-            // LOCALHOST REMOVED
-            const response = await fetch('/api/leads', {
+            // API URL UPDATED
+            const response = await fetch(`${API_BASE_URL}/api/leads`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(leadData)
             });
             if (response.ok) {
@@ -247,8 +250,8 @@ if (currentPage === 'index.html') {
             const ogText = submitBtn.innerHTML; submitBtn.innerHTML = "Saving...";
 
             try {
-                // LOCALHOST REMOVED
-                const response = await fetch(`/api/leads/${id}`, {
+                // API URL UPDATED
+                const response = await fetch(`${API_BASE_URL}/api/leads/${id}`, {
                     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updateData)
                 });
                 if(response.ok) {
@@ -263,8 +266,8 @@ if (currentPage === 'index.html') {
 
     window.deleteLead = async function(id) {
         if(confirm("Are you sure you want to delete this lead?")) {
-            // LOCALHOST REMOVED
-            await fetch(`/api/leads/${id}`, { method: 'DELETE' });
+            // API URL UPDATED
+            await fetch(`${API_BASE_URL}/api/leads/${id}`, { method: 'DELETE' });
             fetchLeads();
             showToast("Lead deleted! 🗑️");
         }
