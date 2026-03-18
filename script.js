@@ -1,6 +1,5 @@
 /* --- script.js --- */
 
-
 const API_BASE_URL = 'https://future-fs-02-gzhx.onrender.com';
 
 const currentPage = window.location.pathname.split('/').pop();
@@ -175,8 +174,23 @@ if (currentPage === 'index.html') {
             const result = await response.json();
             tableBody.innerHTML = ''; 
             
+            // Dashboard metric cards-oda DOM elements-ah select panrom
+            const paidElement = document.querySelector('.metric-card:nth-child(1) .metric-amount');
+            const dueElement = document.querySelector('.metric-card:nth-child(2) .metric-amount');
+            const balanceElement = document.querySelector('.metric-card:nth-child(3) .metric-amount');
+            
+            // Initial variables
+            let totalPaid = 0;
+            let totalDue = 0;
+            const VALUE_PER_LEAD = 1500; // $1,500 per lead
+
             if(result.data.length === 0) {
                 tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center;">No records found. Click 'Add new lead' to insert data.</td></tr>`;
+                
+                // Records illati zero aakkidrom
+                if (paidElement) paidElement.innerText = "$0.00";
+                if (dueElement) dueElement.innerText = "$0.00";
+                if (balanceElement) balanceElement.innerText = "$0.00";
                 return;
             }
 
@@ -187,6 +201,13 @@ if (currentPage === 'index.html') {
                 const initials = lead.name.substring(0,2).toUpperCase();
                 const safeNotes = lead.notes ? lead.notes.replace(/'/g, "\\'") : '';
                 
+                // Dashboard Calculation Logic
+                if (lead.status === "Converted") {
+                    totalPaid += VALUE_PER_LEAD; 
+                } else {
+                    totalDue += VALUE_PER_LEAD; // New or Contacted
+                }
+
                 row.innerHTML = `
                     <td>#LD-${lead.id}</td>
                     <td>
@@ -209,6 +230,15 @@ if (currentPage === 'index.html') {
                 `;
                 tableBody.appendChild(row);
             });
+
+            // Calculate Total Balance
+            const totalBalance = totalPaid + totalDue;
+
+            // DOM-la update panrom
+            if (paidElement) paidElement.innerText = `$${totalPaid.toLocaleString('en-US')}.00`;
+            if (dueElement) dueElement.innerText = `$${totalDue.toLocaleString('en-US')}.00`;
+            if (balanceElement) balanceElement.innerText = `$${totalBalance.toLocaleString('en-US')}.00`;
+
         } catch (error) { console.error("Error fetching leads:", error); }
     }
 
